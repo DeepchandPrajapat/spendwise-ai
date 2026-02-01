@@ -89,6 +89,18 @@ def update_expense(expense_id):
 
     return jsonify({"message": "Expense updated successfully"}), 200
 
+@expenses_bp.route("/<int:expense_id>", methods=["DELETE"])
+def delete_expense(expense_id):
+    expense = Expense.query.get(expense_id)
+    
+    if not expense:
+        return jsonify({"error": "Expense not found"}), 404
+    
+    db.session.delete(expense)
+    db.session.commit()
+    
+    return jsonify({"message": "Expense deleted successfully"}), 200
+
 
 
     

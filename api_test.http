@@ -28,3 +28,7 @@ Content-Type: application/json
   "amount": 999,
   "category": "Gaming"
 }
+
+###
+DELETE http://127.0.0.1:5000/api/expenses/1
+
