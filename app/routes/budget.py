@@ -35,3 +35,46 @@ def get_budget():
         return jsonify({"amount": budget.amount})
     else:
         return jsonify({"amount": 0})  
+
+@budget_bp.route("/api/budget/history", methods=["GET"])
+def get_budget_history():
+    # get all budgets ordered by year and month
+    budgets = Budget.query.order_by(Budget.year.desc(), Budget.month.desc()).all()
+
+    if not budgets:
+        return jsonify([])
+
+    # get all expenses
+    from ..models import Expense
+    expenses = Expense.query.all()
+
+    result = []
+    for budget in budgets:
+        # filter expenses for this month and year
+        monthly_expenses = [
+            e for e in expenses
+            if e.created_at.month == budget.month
+            and e.created_at.year == budget.year
+        ]
+
+        total_spent = sum(e.amount for e in monthly_expenses)
+        percent = (total_spent / budget.amount * 100) if budget.amount > 0 else 0
+
+        # month name
+        month_names = [
+            "January", "February", "March", "April",
+            "May", "June", "July", "August",
+            "September", "October", "November", "December"
+        ]
+        month_name = month_names[budget.month - 1]
+
+        result.append({
+            "month": budget.month,
+            "year": budget.year,
+            "month_name": month_name,
+            "budget": budget.amount,
+            "spent": total_spent,
+            "percent": round(percent, 1)
+        })
+
+    return jsonify(result)    

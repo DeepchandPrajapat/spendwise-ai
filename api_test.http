@@ -52,3 +52,7 @@ Content-Type: application/json
   "month": 3,
   "year": 2026
 }
+
+###
+GET http://127.0.0.1:5000/api/budget/history
+Content-Type: application/json

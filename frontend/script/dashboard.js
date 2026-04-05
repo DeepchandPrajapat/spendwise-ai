@@ -1,3 +1,4 @@
+import { getStatusAndColor } from "./utils.js";
 const API_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/";
 const INSIGHTS_URL = "https://spendwise-ai-mn0e.onrender.com/api/expenses/ai-insights";
 const BUDGET_URL = "https://spendwise-ai-mn0e.onrender.com/api/budget";
@@ -186,13 +187,10 @@ async function updateMonthlyCard() {
     const bar = document.getElementById("budget-bar");
     bar.style.width = Math.min(percent, 100) + "%";
 
-    if (percent < 50) {
-        bar.className = "bg-emerald-500 h-2 rounded-full";
-    } else if (percent < 80) {
-        bar.className = "bg-yellow-500 h-2 rounded-full";
-    } else {
-        bar.className = "bg-red-500 h-2 rounded-full";
-    }
+    const percentValue = Math.round(percent);
+    const result = getStatusAndColor(percentValue);
+
+    bar.className = `${result.color} h-2 rounded-full`;
 }
 
 // run on page load
